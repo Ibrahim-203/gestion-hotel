@@ -11,7 +11,10 @@ const SideBar = () => {
       icon: "fas fa-user",
       spacing: true,
     },
-    { title: "Chambres", link: "/room", icon: "fas fa-key" },
+    { title: "Chambres", link: "", icon: "fas fa-key" ,submenu:true, subItems : [
+		{title : "Les chambres", sublink:"/room"},
+		{title : "Type de chambre", sublink:"/roomType"},
+	] },
     { title: "Espace vente", link: "/store", icon: "fas fa-store" },
 	{ title: "Produit", link: "/product", icon: "fas fa-wine-bottle" },
     { title: "Reservation", link: "/book", icon: "fas fa-book" },
