@@ -44,9 +44,23 @@ router.delete("/:id",(req,res)=>{
 })
 
 router.post("/",(req, res)=>{
-    const {type, price} = req.body
-    const query = "INSERT INTO typeRoom (type,price) values (?,?)";
+    const {type, price, nbr_bed} = req.body 
+    const query = "INSERT INTO typeRoom (type,price, nbr_bed) values (?,?,?)";
     db.query(query,[type,price], (err, results) => {
+        if (err) {
+          return res.status(500).send('Erreur lors de la requête.');
+        }else{
+            res.status(200).send(`Données insérés avec succès`);
+        }
+        
+      });
+    
+})
+router.put("/:id",(req, res)=>{
+    const id = req.params.id
+    const {type, price, nbr_bed} = req.body
+    const query = "UPDATE `typeroom` SET `type`= ?,`price`= ?,`nbr_bed`= ? WHERE `id_type_room` = ?";
+    db.query(query,[type,price,nbr_bed,id], (err, results) => {
         if (err) {
           return res.status(500).send('Erreur lors de la requête.');
         }else{

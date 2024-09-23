@@ -24,10 +24,19 @@ const Clients = () => {
 
     
 	const [open, setOpen] = useState(false);
-	const handleOpen = () => setOpen(true);
+
 	const handleClose = () => setOpen(false);
+    const [isEditing, setIsEditing] = useState(false);
+    const [selectValue, setSelectValue] = useState('')
     const [listClient, setListClient] = useState([])
     const [searchTerm, setSearchTerm] = useState('')
+
+    const handleOpen = () => {
+        setIsEditing(false)
+        setSelectValue('')
+        setFormValue({});
+        setOpen(true);
+    };
 
     // ------------------------ F O R  N O T I F I C A T I O N ----------------------------//
     const toaster = useToaster();
@@ -49,9 +58,13 @@ const Clients = () => {
 // ------------------------ D A T A B A S E  R E Q U E S T ----------------------------//
         const postClient = async (data) => {
             try {
+                if(isEditing){
+                const response = await axios.put(`http://localhost:3001/client/${data.id}`, data);
+                toaster.push(messageAdd, { placement, duration: 5000 });
+                }else{
                 const response = await axios.post('http://localhost:3001/client', data);
                 toaster.push(messageAdd, { placement, duration: 5000 });
-                console.log('Réponse du serveur:', response.data);
+                }
                 getClients(); // Recharger les données après l'insertion
             } catch (error) {
                 console.error('Erreur lors de l\'envoi des données:', error);
@@ -62,20 +75,11 @@ const Clients = () => {
             try {
                 const response = await axios.get('http://localhost:3001/client');
                 setListClient(response.data);
-                console.log(listClient);
             } catch (error) {
                 console.error('Erreur lors de la récupération des données:', error);
             }
         };
-        const getSingleclient = async (id) => {
-            try {
-                const response = await axios.get(`http://localhost:3001/client/${id}`);
-                console.log(response.data);
-            } catch (error) {
-                console.error('Erreur lors de la récupération des données:', error);
-            }
-        };
-    
+        
         const deleteClient = async (id) => {
             try {
                 const response = await axios.delete(`http://localhost:3001/client/${id}`);
@@ -95,8 +99,11 @@ const Clients = () => {
     
     // Filtrer les données en fonction du texte de recherche
 const filteredData = listClient.filter(item => 
-    item.nom.toLowerCase().includes(searchTerm.toLowerCase())
+    item.nom.toLowerCase().includes(searchTerm.toLowerCase()) || 
+    item.prenom.toLowerCase().includes(searchTerm.toLowerCase())
 );
+
+
     // ------------------------ F O R  T A B L E ----------------------------//
 
     // data of select
@@ -122,6 +129,29 @@ const filteredData = listClient.filter(item =>
         handleClose()
         
     }
+
+    const handleEdit = (data) => {
+        console.log(data);
+        setSelectValue(data.piece_idtt)
+        setFormValue({
+            id : data.id,
+            name : data.nom,
+            surname : data.prenom,
+            date_naiss : new Date(data.date_naiss),
+            lieu_naiss : data.lieu_naiss,
+            pere : data.pere,
+            mere : data.mere,
+            profession : data.proffession ,
+            domicile : data.domicile ,
+            nationalite : data.nationalite,
+            date_dlvr : new Date(data.date_dlvr),
+            lieu_dlvr : data.lieu_dlvr,
+            num_idtt : data.num_idtt,
+        });
+        
+        setIsEditing(true);
+        setOpen(true);
+    };
 
     function myContent() {
         return <Form
@@ -229,11 +259,13 @@ const filteredData = listClient.filter(item =>
                     <SelectPicker
                         data={data}
                         searchable={false}
-                        placeholder="Select without search"
+                        value = {selectValue}
+                        placeholder="Choisir une pice"
                         name="piece_idtt"
-                        onChange={(value) =>
+                        onChange={(value) =>{
+                            setSelectValue(value)
                             setFormValue({ ...formValue, piece_idtt: value })
-                          } // Mettre à jour l'état du formulaire
+                        }} // Mettre à jour l'état du formulaire
                         />
                 </Form.Group>
                     </Col>
@@ -339,7 +371,7 @@ const filteredData = listClient.filter(item =>
                                 {rowData => (
                                     <>
                                     <IconButton icon={<Edit color='green'/>} onClick={()=>{
-                                        getSingleclient(rowData.id)
+                                        handleEdit(rowData)
                                     }}/>
                                     <IconButton  icon={<Trash color='red'/>} onClick={()=>{
                                         deleteClient(rowData.id)

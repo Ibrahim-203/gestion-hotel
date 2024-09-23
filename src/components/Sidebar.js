@@ -3,6 +3,12 @@ import { NavLink } from 'react-router-dom';
 
 const SideBar = () => {
 
+	const handleLogout = (e)=>{
+		e.preventDefault()
+		sessionStorage.clear()
+		window.location.reload(false)
+	}
+
 	const menus = [
 		{ title: "Tableau de bord", link: "/", icon: "fas fa-tachometer-alt" },
     {
@@ -15,19 +21,17 @@ const SideBar = () => {
 		{title : "Les chambres", sublink:"/room"},
 		{title : "Type de chambre", sublink:"/roomType"},
 	] },
-    { title: "Espace vente", link: "/store", icon: "fas fa-store" },
+	{ title: "vente", link: "", icon: "fas fa-store" ,submenu:true, subItems : [
+		{title : "Espace vente", sublink:"/store"},
+		{title : "Liste vente", sublink:"/listStore"},
+	] },
 	{ title: "Produit", link: "/product", icon: "fas fa-wine-bottle" },
     { title: "Reservation", link: "/book", icon: "fas fa-book" },
-	{ title: "Utilisateurs", link: "", icon: "fas fa-user-plus", submenu:true, subItems : [
-		{title : "item1", sublink:"/item1"},
-		{title : "item2", sublink:"/item2"},
-		{title : "item3", sublink:"/item3"}
-	] },
-    {
-      title: "Se deconnecter",
-      link: "/logout",
-      icon:"fas fa-door-open" ,
-    },
+	// { title: "Utilisateurs", link: "", icon: "fas fa-user-plus", submenu:true, subItems : [
+	// 	{title : "item1", sublink:"/item1"},
+	// 	{title : "item2", sublink:"/item2"},
+	// 	{title : "item3", sublink:"/item3"}
+	// ] },
 	]
 	const [subOpen, setSubOpen] = useState(null)
 	// update value of sub menu
@@ -38,13 +42,13 @@ const SideBar = () => {
         <div>
 			<div className="header">
 			<div className="header-left">
-				<a href="/" className="logo"> <img src="assets/img/hotel_logo.png" width="50" height="70" alt="logo"/> <span className="logoclass">HOTEL</span> </a>
-				<a href="/" className="logo logo-small"> <img src="assets/img/hotel_logo.png" alt="Logo" width="30" height="30"/> </a>
+				<a href="/" className="logo"> <img src="assets/img/hotel_logo.jpg" width="50" height="70" alt="logo"/> <span className="logoclass">HOTEL</span> </a>
+				<a href="/" className="logo logo-small"> <img src="assets/img/hotel_logo.jpg" alt="Logo" width="30" height="30"/> </a>
 			</div>
 			<a href="#" id="toggle_btn"> <i className="fe fe-text-align-left"></i> </a>
 			<a className="mobile_btn" id="mobile_btn"> <i className="fas fa-bars"></i> </a>
 			<ul className="nav user-menu">
-				<li className="nav-item dropdown noti-dropdown">
+				{/* <li className="nav-item dropdown noti-dropdown">
 					<a href="#" className="dropdown-toggle nav-link" data-toggle="dropdown"> <i className="fe fe-bell"></i> <span className="badge badge-pill">3</span> </a>
 					<div className="dropdown-menu notifications">
 						<div className="topnav-dropdown-header"> <span className="notification-title">Notifications</span> <a href="#" className="clear-noti"> Clear All </a> </div>
@@ -106,22 +110,25 @@ const SideBar = () => {
 						</div>
 						<div className="topnav-dropdown-footer"> <a href="#">View all Notifications</a> </div>
 					</div>
-				</li>
+				</li> */}
 				<li className="nav-item dropdown has-arrow">
-					<a href="#" className="dropdown-toggle nav-link" data-toggle="dropdown"> <span className="user-img"><img className="rounded-circle" src="assets/img/profiles/avatar-01.jpg" width="31" alt="Soeng Souy"/></span> </a>
+					<a href="#" className="dropdown-toggle nav-link" data-toggle="dropdown"> <span className="user-img"><img className="rounded-circle" src="assets/img/profiles/profil.jpg" width="31" alt="utilisateur"/></span> </a>
 					<div className="dropdown-menu">
-						<div className="user-header">
+						{/* <div className="user-header">
 							<div className="avatar avatar-sm"> <img src="assets/img/profiles/avatar-01.jpg" alt="User Image" className="avatar-img rounded-circle"/> </div>
 							<div className="user-text">
 								<h6>Soeng Souy</h6>
 								<p className="text-muted mb-0">Administrator</p>
 							</div>
-						</div> <a className="dropdown-item" href="profile.html">My Profile</a> <a className="dropdown-item" href="settings.html">Account Settings</a> <a className="dropdown-item" href="login.html">Logout</a> </div>
+						</div>  */}
+						{/* <a className="dropdown-item" href="profile.html">My Profile</a> <a className="dropdown-item" href="settings.html">Account Settings</a>  */}
+						<a className="dropdown-item" href='#' onClick={handleLogout}>Se Deconnecter</a> 
+						</div>
 				</li>
 			</ul>
 			<div className="top-nav-search">
 				<form>
-					<input type="text" className="form-control" placeholder="Search here"/>
+					<input type="text" className="form-control" placeholder="Recherche"/>
 					<button className="btn" type="submit"><i className="fas fa-search"></i></button>
 				</form>
 			</div>
@@ -143,8 +150,6 @@ const SideBar = () => {
 								
 							</li>
 						))}
-						<li className="list-divider"></li>
-						<li className="menu-title mt-3"> <span>EXTRAS</span> </li>
 					</ul>
 				</div>
 			</div>

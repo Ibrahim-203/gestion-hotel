@@ -17,14 +17,14 @@ router.get("/",(req,res)=>{
 
 router.get("/:id",(req,res)=>{
     const id = req.params.id
-    const query = "SELECT * FROM typeRoom where id_type_room = ? ";
+    const query = "SELECT * FROM client where id = ? ";
 
     db.query(query,[id],(err,results)=>{
         if(err){
             return res.status(500).send(err)
         }else{
             return res.status(200).send(results);
-                        
+                         
         }
     })
 })
@@ -47,6 +47,20 @@ router.post("/",(req, res)=>{
     const {name,surname,date_naiss,lieu_naiss,pere,mere,profession,domicile,nationalite,piece_idtt,num_idtt,date_dlvr,lieu_dlvr} = req.body
     const query = "INSERT INTO `client`( `nom`, `prenom`, `date_naiss`, `lieu_naiss`, `pere`, `mere`, `proffession`, `domicile`, `nationalite`, `piece_idtt`, `num_idtt`, `date_dlvr`, `lieu_dlvr`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
     db.query(query,[name,surname,date_naiss,lieu_naiss,pere,mere,profession,domicile,nationalite,piece_idtt,num_idtt,date_dlvr,lieu_dlvr], (err) => {
+        if (err) {
+          return res.status(500).send(err);
+        }else{
+            res.status(200).send(`Données insérés avec succès`);
+        }
+        
+      });
+    
+})
+
+router.put("/:id",(req, res)=>{
+    const {id, name,surname,date_naiss,lieu_naiss,pere,mere,profession,domicile,nationalite,piece_idtt,num_idtt,date_dlvr,lieu_dlvr} = req.body;
+    const query = "UPDATE `client` SET `nom`= ?,`prenom`= ?,`date_naiss`= ?,`lieu_naiss`= ?,`pere`= ?,`mere`= ?,`proffession`= ?,`domicile`= ?,`nationalite`= ?,`piece_idtt`= ?,`num_idtt`= ?,`date_dlvr`= ?,`lieu_dlvr`= ? WHERE id = ?";
+    db.query(query,[name,surname,date_naiss,lieu_naiss,pere,mere,profession,domicile,nationalite,piece_idtt,num_idtt,date_dlvr,lieu_dlvr, id], (err) => {
         if (err) {
           return res.status(500).send(err);
         }else{
